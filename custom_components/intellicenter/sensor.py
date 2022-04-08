@@ -21,8 +21,10 @@ from .pyintellicenter import (
     LOTMP_ATTR,
     LSTTMP_ATTR,
     ORPTNK_ATTR,
+    ORPVOL_ATTR,
     ORPVAL_ATTR,
     PHTNK_ATTR,
+    PHVOL_ATTR,
     PHVAL_ATTR,
     PUMP_TYPE,
     PWR_ATTR,
@@ -166,6 +168,18 @@ async def async_setup_entry(
                             name="+ (Ph Tank Level)",
                         )
                     )
+                if PHVOL_ATTR in object.attributes:
+                    sensors.append(
+                        PoolSensor(
+                            entry,
+                            controller,
+                            object,
+                            device_class=None,
+                            extraStateAttributes={'adjusted_value', 'adjusted_value_backup'},
+                            attribute_key=PHVOL_ATTR,
+                            name="+ (Ph Volume)",
+                        )
+                    )
                 if ORPTNK_ATTR in object.attributes:
                     sensors.append(
                         PoolSensor(
@@ -175,6 +189,18 @@ async def async_setup_entry(
                             device_class=None,
                             attribute_key=ORPTNK_ATTR,
                             name="+ (ORP Tank Level)",
+                        )
+                    )
+                if ORPVOL_ATTR in object.attributes:
+                    sensors.append(
+                        PoolSensor(
+                            entry,
+                            controller,
+                            object,
+                            device_class=None,
+                            extraStateAttributes={'adjusted_value', 'adjusted_value_backup'},
+                            attribute_key=ORPVOL_ATTR,
+                            name="+ (ORP Volume)",
                         )
                     )
             elif object.subtype == "ICHLOR":
@@ -213,6 +239,17 @@ class PoolSensor(PoolEntity):
         self._device_class = device_class
         self._rounding_factor = rounding_factor
 
+    def getAdjustedValue(self, value: str) -> str:
+        tweaked = False
+        if self._attribute_key == PHTNK_ATTR or self._attribute_key == ORPTNK_ATTR:
+            value = int(value) - 1
+            tweaked = True
+
+        if tweaked:
+            _LOGGER.debug(f"getAdjustedValue : tweaked {self._attribute_key} to {value}")
+
+        return str(value)
+
     @property
     def device_class(self) -> Optional[str]:
         """Return the class of this device, from component DEVICE_CLASSES."""
@@ -223,6 +260,7 @@ class PoolSensor(PoolEntity):
         """Return the state of the sensor."""
 
         value = str(self._poolObject[self._attribute_key])
+        value = self.getAdjustedValue(value)
 
         # some sensors, like variable speed pumps, can vary constantly
         # so rounding their value to a nearest multiplier of 'rounding'

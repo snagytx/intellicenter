@@ -44,6 +44,10 @@ QUALTY_ATTR = "QUALTY"
 READY_ATTR = "READY"
 RPM_ATTR = "RPM"
 SALT_ATTR = "SALT"
+ORPVOL_ATTR = "ORPVOL"
+PHVOL_ATTR = "PHVOL"
+ORPMOD_ATTR = "ORPMOD"
+PHMOD_ATTR = "PHMOD"
 SELECT_ATTR = "SELECT"
 SHOMNU_ATTR = "SHOMNU"
 SNAME_ATTR = "SNAME"
@@ -143,6 +147,24 @@ CHEM_ATTRIBUTES = {
     SUBTYP_ATTR,  # 'ICHLOR' for IntelliChlor, 'ICHEM' for IntelliChem
     SUPER_ATTR,  # (ON/OFF) IntelliChlor: turn on Boost mode (aka Super Chlorinate)
     TIMOUT_ATTR,  # (int) IntelliChlor: in seconds ??
+    "FLOWDLY",
+    "HNAME",
+    "MODE",
+    "NOFLO",
+    "ORPCHK",
+    "ORPFED",
+    ORPMOD_ATTR,
+    "ORPTIM",
+    "ORPTYP",
+    ORPVOL_ATTR,
+    "PHCHK",
+    "PHFED",
+    PHMOD_ATTR,
+    "PHTIM",
+    "PHTYP",
+    PHVOL_ATTR,
+    "PROBE",
+    "STATIC",
 }
 CIRCGRP_ATTRIBUTES = {
     ACT_ATTR,

@@ -11,6 +11,9 @@ from custom_components.intellicenter.pyintellicenter.attributes import (
     BODY_ATTR,
     CIRCUIT_TYPE,
     HEATER_TYPE,
+    CHEM_TYPE,
+    PHMOD_ATTR,
+    ORPMOD_ATTR
 )
 from custom_components.intellicenter.water_heater import HEATER_ATTR, HTMODE_ATTR
 
@@ -56,6 +59,28 @@ async def async_setup_entry(
             )
         elif object.objtype == "PUMP":
             sensors.append(PoolBinarySensor(entry, controller, object, valueForON="10"))
+        elif object.objtype == CHEM_TYPE:
+            if object.subtype == "ICHEM":
+              if PHMOD_ATTR in object.attributes:
+                    sensors.append(
+                        PoolBinarySensor(
+                            entry,
+                            controller,
+                            object,
+                            attribute_key=PHMOD_ATTR,
+                            name="+ (PH mod)",
+                        )
+                    )
+              if ORPMOD_ATTR in object.attributes:
+                    sensors.append(
+                        PoolBinarySensor(
+                            entry,
+                            controller,
+                            object,
+                            attribute_key=ORPMOD_ATTR,
+                            name="+ (ORP mod)",
+                        )
+                    )
     async_add_entities(sensors)
 
 
